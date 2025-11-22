@@ -26,18 +26,17 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenPortals }) => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
           ? 'bg-white/70 backdrop-blur-lg shadow-lg border-b border-white/20'
           : 'bg-transparent'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center gap-3">
             <img
-              src="https://i.imgur.com/JzYtEwz.png"
+              src="/logo.png"
               alt="Daniel Generation School Logo"
               className="h-14 w-auto object-contain drop-shadow-sm"
             />
@@ -59,23 +58,23 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenPortals }) => {
                 <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-dgs-primary transition-all group-hover:w-full"></span>
               </a>
             ))}
-             
-             {/* Staff Portal Button */}
-             <button 
-               onClick={onOpenPortals}
-               className="text-gray-500 hover:text-dgs-primary flex items-center gap-1 text-sm font-medium transition-colors"
-             >
-               <Lock size={14} />
-               Staff Portals
-             </button>
 
-             <a
-                href="#location"
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-dgs-accent text-white hover:bg-dgs-primary transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                <MapPin size={16} />
-                <span className="text-sm font-bold">Find Us</span>
-              </a>
+            {/* Staff Portal Button */}
+            <button
+              onClick={onOpenPortals}
+              className="text-gray-500 hover:text-dgs-primary flex items-center gap-1 text-sm font-medium transition-colors"
+            >
+              <Lock size={14} />
+              Staff Portals
+            </button>
+
+            <a
+              href="#location"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-dgs-accent text-white hover:bg-dgs-primary transition-all duration-300 shadow-md hover:shadow-lg"
+            >
+              <MapPin size={16} />
+              <span className="text-sm font-bold">Find Us</span>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -104,24 +103,24 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenPortals }) => {
                 {link.label}
               </a>
             ))}
-             <button
-                onClick={() => {
-                  onOpenPortals();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-3 text-base font-medium text-gray-600 hover:text-dgs-primary"
-              >
-                <Lock size={18} />
-                Staff Portals
-              </button>
-             <a
-                href="#location"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex w-full items-center gap-2 px-3 py-3 text-base font-medium text-dgs-primary"
-              >
-                <MapPin size={18} />
-                Location
-              </a>
+            <button
+              onClick={() => {
+                onOpenPortals();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex w-full items-center gap-2 px-3 py-3 text-base font-medium text-gray-600 hover:text-dgs-primary"
+            >
+              <Lock size={18} />
+              Staff Portals
+            </button>
+            <a
+              href="#location"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex w-full items-center gap-2 px-3 py-3 text-base font-medium text-dgs-primary"
+            >
+              <MapPin size={18} />
+              Location
+            </a>
           </div>
         </div>
       )}
