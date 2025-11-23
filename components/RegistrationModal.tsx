@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface RegistrationModalProps {
@@ -10,6 +10,17 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,16 +35,16 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop Blur */}
-      <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity" 
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity"
         onClick={onClose}
       ></div>
 
       {/* Modal Content */}
       <div className="relative bg-white/95 rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide animate-[fadeIn_0.3s_ease-out]">
-        
+
         {/* Close Button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors z-10"
         >
@@ -56,7 +67,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
             <div className="mb-10 border-b border-gray-200 pb-6">
               <h2 className="text-3xl font-bold text-dgs-primary mb-4">Student Registration</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Omega Church is excited to launch <span className="font-bold text-dgs-primary">Daniel Generation School (DGS)</span> this September. 
+                Omega Church is excited to launch <span className="font-bold text-dgs-primary">Daniel Generation School (DGS)</span> this September.
                 We are dedicated to delivering a comprehensive education founded on Christian principles, utilizing the Cambridge Curriculum for Kindergarten 1 through Grade 3.
               </p>
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg flex gap-3 items-start">
@@ -68,14 +79,14 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-10">
-              
+
               {/* Section 1: Student Details */}
               <section className="space-y-6">
                 <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                   <span className="w-8 h-8 rounded-full bg-dgs-accent text-white flex items-center justify-center text-sm">1</span>
                   Student Information
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-gray-700 mb-1">Student's Full Name (First, Middle, Last) *</label>
@@ -141,18 +152,18 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                   <span className="w-8 h-8 rounded-full bg-dgs-accent text-white flex items-center justify-center text-sm">2</span>
                   Health Information
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                     <label className="block text-sm font-bold text-gray-700 mb-1">Health Insurance Used *</label>
-                     <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" placeholder="e.g. RSSB, MMI, UAP..." />
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Health Insurance Used *</label>
+                    <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" placeholder="e.g. RSSB, MMI, UAP..." />
                   </div>
                   <div>
-                     <label className="block text-sm font-bold text-gray-700 mb-1">Any Special Medical Attention? *</label>
-                     <select required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all">
-                       <option value="No">No</option>
-                       <option value="Yes">Yes (Please specify below)</option>
-                     </select>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Any Special Medical Attention? *</label>
+                    <select required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all">
+                      <option value="No">No</option>
+                      <option value="Yes">Yes (Please specify below)</option>
+                    </select>
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-gray-700 mb-1">Vaccinations or Medical Issues (Allergies, Asthma, etc.) *</label>
@@ -167,7 +178,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                   <span className="w-8 h-8 rounded-full bg-dgs-accent text-white flex items-center justify-center text-sm">3</span>
                   Primary Parent/Guardian
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-gray-700 mb-1">Full Name (First, Middle, Surname) *</label>
@@ -189,7 +200,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                     <label className="block text-sm font-bold text-gray-700 mb-1">Occupation *</label>
                     <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" />
                   </div>
-                   <div className="md:col-span-2">
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-gray-700 mb-1">Residential Address *</label>
                     <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" />
                   </div>
@@ -202,7 +213,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                   <span className="w-8 h-8 rounded-full bg-dgs-accent text-white flex items-center justify-center text-sm">4</span>
                   Second Parent/Guardian
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-gray-700 mb-1">Full Name (First, Middle, Surname) *</label>
@@ -212,7 +223,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                     <label className="block text-sm font-bold text-gray-700 mb-1">Relationship to Student *</label>
                     <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" placeholder="e.g. Father" />
                   </div>
-                   <div>
+                  <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Phone Number *</label>
                     <input type="tel" pattern="[0-9\+\s]+" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" placeholder="+250..." />
                   </div>
@@ -224,7 +235,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                     <label className="block text-sm font-bold text-gray-700 mb-1">Occupation *</label>
                     <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" />
                   </div>
-                   <div className="md:col-span-2">
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-bold text-gray-700 mb-1">Residential Address *</label>
                     <input type="text" required className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-dgs-primary focus:ring-2 focus:ring-dgs-primary/20 outline-none transition-all" />
                   </div>
@@ -232,8 +243,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
               </section>
 
               <div className="pt-8 border-t border-gray-200 flex justify-end">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="bg-dgs-primary text-white font-bold py-4 px-10 rounded-xl shadow-xl hover:bg-[#4d0026] hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3 text-lg"
                 >
                   <Send size={20} />

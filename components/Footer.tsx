@@ -6,12 +6,12 @@ const Footer: React.FC = () => {
     <footer id="location" className="bg-gray-900 text-white pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          
+
           {/* Contact Info */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-               <img src="https://i.imgur.com/JzYtEwz.png" alt="DGS Logo" className="h-12 w-auto bg-white rounded-full p-1" />
-               <span className="font-bold text-xl tracking-wider">DGS</span>
+              <img src="/logo.png" alt="DGS Logo" className="h-12 w-auto bg-white rounded-full p-1" />
+              <span className="font-bold text-xl tracking-wider">DGS</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
               Shaping Godly character and futures. Daniel Generation School is dedicated to providing a nurturing Christian environment for young minds in Kigali.
@@ -25,9 +25,9 @@ const Footer: React.FC = () => {
                 <Mail size={18} className="text-dgs-accent mt-1" />
                 <span>info@danielgenerationschool.rw</span>
               </div>
-               <div className="flex items-start gap-3 text-gray-300">
+              <div className="flex items-start gap-3 text-gray-300">
                 <MapPin size={18} className="text-dgs-accent mt-1" />
-                <span>KG 24 Av, No 38<br/>Kagugu, Gasabo District<br/>Kigali City, Rwanda</span>
+                <span>KG 24 Av, No 38<br />Kagugu, Gasabo District<br />Kigali City, Rwanda</span>
               </div>
             </div>
           </div>
@@ -45,20 +45,20 @@ const Footer: React.FC = () => {
 
           {/* Map - Centered on Kagugu area */}
           <div className="rounded-xl overflow-hidden h-64 bg-gray-800 relative group border border-gray-700">
-             {/* Embed Google Map for Kagugu, Kigali */}
-             <iframe 
-               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15950.09369512157!2d30.08522235!3d-1.93060665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca6a40303528b%3A0x598a0e2c76363056!2sKagugu%2C%20Kigali!5e0!3m2!1sen!2srw!4v1708616200000!5m2!1sen!2srw" 
-               width="100%" 
-               height="100%" 
-               style={{ border: 0, filter: 'grayscale(20%) contrast(1.2) opacity(0.8)' }} 
-               allowFullScreen 
-               loading="lazy"
-               referrerPolicy="no-referrer-when-downgrade"
-               className="group-hover:filter-none transition-all duration-500"
-             ></iframe>
-             <div className="absolute bottom-0 left-0 w-full p-2 bg-black/60 backdrop-blur-sm text-xs text-center text-gray-300">
-               KG 24 Av, Kagugu, Kigali
-             </div>
+            {/* Embed Google Map for Kagugu, Kigali */}
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15950.09369512157!2d30.08522235!3d-1.93060665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca6a40303528b%3A0x598a0e2c76363056!2sKagugu%2C%20Kigali!5e0!3m2!1sen!2srw!4v1708616200000!5m2!1sen!2srw"
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: 'grayscale(20%) contrast(1.2) opacity(0.8)' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="group-hover:filter-none transition-all duration-500"
+            ></iframe>
+            <div className="absolute bottom-0 left-0 w-full p-2 bg-black/60 backdrop-blur-sm text-xs text-center text-gray-300">
+              KG 24 Av, Kagugu, Kigali
+            </div>
           </div>
         </div>
 

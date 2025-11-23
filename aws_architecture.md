@@ -66,7 +66,25 @@ You need to store your secrets (API Keys, DB Password) securely.
 
 ### 4. Deploy
 -   **Frontend**: Push to `main` on GitHub. The Action will build and deploy.
+    -   *Note*: Yes, any change pushed to GitHub will be automatically built and deployed to the website. This is a full CI/CD pipeline for the frontend.
 -   **Backend**: Add the provided `gitlab-ci-snippet.yml` content to your GitLab repository's `.gitlab-ci.yml`.
+
+## Maintenance Mode ("Lightswitch")
+To quickly take the site offline for maintenance without destroying infrastructure:
+
+1.  **Prerequisites**: Ensure `aws` CLI is configured and you have the `scripts/toggle_maintenance.sh` script.
+2.  **Turn ON Maintenance**:
+    ```bash
+    export BUCKET_NAME="your-s3-bucket-name"
+    export DISTRIBUTION_ID="your-cloudfront-id"
+    ./scripts/toggle_maintenance.sh on
+    ```
+    This swaps your live `index.html` with a maintenance page.
+3.  **Turn OFF Maintenance**:
+    ```bash
+    ./scripts/toggle_maintenance.sh off
+    ```
+    This restores your original site.
 
 ## Cost Monitoring
 To ensure you stay in the Free Tier:
