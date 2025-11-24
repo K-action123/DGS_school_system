@@ -32,7 +32,12 @@ if [ "$MODE" == "on" ]; then
 
     # Upload maintenance page as index
     echo "Activating maintenance page..."
-    aws s3 cp "s3://$BUCKET_NAME/maintenance.html" "s3://$BUCKET_NAME/index.html"
+    if [ -f "public/maintenance.html" ]; then
+        aws s3 cp "public/maintenance.html" "s3://$BUCKET_NAME/index.html" --content-type "text/html"
+    else
+        echo "Error: public/maintenance.html not found locally."
+        exit 1
+    fi
 
 elif [ "$MODE" == "off" ]; then
     echo "Turning Maintenance Mode OFF..."

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, Send, CircleCheck, CircleAlert } from 'lucide-react';
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -8,8 +8,6 @@ interface RegistrationModalProps {
 
 const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
-
-  if (!isOpen) return null;
 
   useEffect(() => {
     if (isOpen) {
@@ -21,6 +19,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+
+  if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +54,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
         {submitted ? (
           <div className="flex flex-col items-center justify-center h-96 p-8 text-center">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6 animate-bounce">
-              <CheckCircle size={40} />
+              <CircleCheck size={40} />
             </div>
             <h3 className="text-3xl font-bold text-gray-800 mb-2">Registration Received!</h3>
             <p className="text-gray-600 max-w-md">
@@ -71,7 +71,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ isOpen, onClose }
                 We are dedicated to delivering a comprehensive education founded on Christian principles, utilizing the Cambridge Curriculum for Kindergarten 1 through Grade 3.
               </p>
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg flex gap-3 items-start">
-                <AlertCircle className="text-blue-500 flex-shrink-0 mt-0.5" size={18} />
+                <CircleAlert className="text-blue-500 flex-shrink-0 mt-0.5" size={18} />
                 <p className="text-sm text-blue-800">
                   To secure a place, please complete this form. We will send a confirmation to your email to finalize the process.
                 </p>
