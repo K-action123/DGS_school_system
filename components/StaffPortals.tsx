@@ -75,7 +75,7 @@ const StaffPortals: React.FC<StaffPortalsProps> = ({ isOpen, onClose }) => {
               onClick={() => {
                 if (portal.id === 'librarian') {
                   // TODO: Update this URL after deploying the library project
-                  window.open('http://localhost:3000', '_blank');
+                  window.open('http://3.88.104.220:3000/library', '_blank');
                 } else {
                   alert(`Accessing ${portal.role} (Secured Area)`);
                 }
