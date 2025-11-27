@@ -72,7 +72,14 @@ const StaffPortals: React.FC<StaffPortalsProps> = ({ isOpen, onClose }) => {
             <div
               key={portal.id}
               className="group relative bg-[#e0e5ec] rounded-[40px] shadow-neumorphism p-10 flex flex-col items-center text-center transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
-              onClick={() => alert(`Accessing ${portal.role} (Secured Area)`)}
+              onClick={() => {
+                if (portal.id === 'librarian') {
+                  // TODO: Update this URL after deploying the library project
+                  window.open('http://localhost:3000', '_blank');
+                } else {
+                  alert(`Accessing ${portal.role} (Secured Area)`);
+                }
+              }}
             >
               {/* Large User/Role Icon in Neumorphic Circle */}
               <div className="w-32 h-32 rounded-full bg-[#e0e5ec] shadow-neumorphism flex items-center justify-center text-dgs-primary mb-8 group-hover:text-dgs-accent transition-colors duration-300">

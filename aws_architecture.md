@@ -91,3 +91,4 @@ To ensure you stay in the Free Tier:
 1.  Go to **AWS Billing Dashboard**.
 2.  Enable **Free Tier Alerts** to get emails if you approach limits.
 3.  Check **Cost Explorer** weekly.
+
