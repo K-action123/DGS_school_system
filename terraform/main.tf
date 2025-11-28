@@ -130,7 +130,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   # Cache behavior for Library App
   ordered_cache_behavior {
-    path_pattern     = "/library/*"
+    path_pattern     = "/library*"
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "Library-App"
