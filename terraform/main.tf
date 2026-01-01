@@ -39,8 +39,99 @@ resource "aws_s3_bucket_versioning" "frontend_bucket" {
   }
 }
 
+resource "aws_s3_bucket_logging" "frontend_bucket" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  target_bucket = aws_s3_bucket.logs_bucket.id
+  target_prefix = "s3-access-logs/"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "frontend_bucket" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  rule {
+    id     = "delete-old-versions"
+    status = "Enabled"
+
+    filter {}
+
+    noncurrent_version_expiration {
+      noncurrent_days = 90
+    }
+  }
+}
+
 resource "random_id" "bucket_suffix" {
   byte_length = 4
+}
+
+# --- Logging Bucket ---
+resource "aws_s3_bucket" "logs_bucket" {
+  bucket = "dgs-logs-bucket-${random_id.bucket_suffix.hex}"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "logs_bucket" {
+  bucket = aws_s3_bucket.logs_bucket.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "logs_bucket" {
+  bucket = aws_s3_bucket.logs_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "logs_bucket" {
+  bucket                  = aws_s3_bucket.logs_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Extra lifecycle for logs bucket to keep costs low
+resource "aws_s3_bucket_lifecycle_configuration" "logs_bucket" {
+  bucket = aws_s3_bucket.logs_bucket.id
+  rule {
+    id     = "expire-logs"
+    status = "Enabled"
+    filter {}
+    expiration {
+      days = 30
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "logs_bucket" {
+  bucket = aws_s3_bucket.logs_bucket.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowS3Logging"
+        Effect = "Allow"
+        Principal = {
+          Service = "logging.s3.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "${aws_s3_bucket.logs_bucket.arn}/s3-access-logs/*"
+      },
+      {
+        Sid    = "AllowCloudFrontLogging"
+        Effect = "Allow"
+        Principal = {
+          Service = "delivery.logs.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "${aws_s3_bucket.logs_bucket.arn}/cloudfront-logs/*"
+      }
+    ]
+  })
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend_bucket" {
@@ -133,6 +224,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   default_root_object = "index.html"
 
+  logging_config {
+    bucket          = aws_s3_bucket.logs_bucket.bucket_domain_name
+    include_cookies = false
+    prefix          = "cloudfront-logs/"
+  }
+
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
@@ -149,6 +246,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+
+    response_headers_policy_id = "67f77271-a492-41de-9544-8da547922919"
   }
 
 
