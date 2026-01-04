@@ -26,6 +26,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "frontend_bucket" 
   bucket = aws_s3_bucket.frontend_bucket.id
 
   rule {
+    # trivy:ignore:AVD-AWS-0132
+    # checkov:skip=CKV_AWS_145:KMS is not in free tier
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -73,6 +75,8 @@ resource "aws_s3_bucket" "logs_bucket" {
 resource "aws_s3_bucket_server_side_encryption_configuration" "logs_bucket" {
   bucket = aws_s3_bucket.logs_bucket.id
   rule {
+    # trivy:ignore:AVD-AWS-0132
+    # checkov:skip=CKV_AWS_145:KMS is not in free tier
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -230,6 +234,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     prefix          = "cloudfront-logs/"
   }
 
+  # trivy:ignore:AVD-AWS-0011
+  # checkov:skip=CKV_AWS_68:WAF is not in free tier
+  # checkov:skip=CKV_AWS_310:Origin failover is not required for MVP
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
@@ -302,6 +309,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+    # checkov:skip=CKV_AWS_174:Using default CloudFront certificate for Free Tier
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   custom_error_response {

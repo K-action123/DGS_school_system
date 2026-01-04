@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Book, Users, GraduationCap, ShieldCheck, ArrowLeft, User } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ShieldCheck, ArrowLeft, Lock, User, Key } from 'lucide-react';
 
 interface StaffPortalsProps {
   isOpen: boolean;
@@ -7,101 +7,210 @@ interface StaffPortalsProps {
 }
 
 const StaffPortals: React.FC<StaffPortalsProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const slides = [
+    {
+      url: '/staff_login_1.png',
+      title: 'Academic Excellence',
+      description: 'Unified gateway for Daniel Generation School educators and administration.'
+    },
+    {
+      url: '/staff_login_2.png',
+      title: 'Secure Access',
+      description: 'Protecting our educational resources with state-of-the-art security.'
+    },
+    {
+      url: '/staff_login_3.png',
+      title: 'Digital Library',
+      description: 'Streamlined resource management for our growing knowledge base.'
+    }
+  ];
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      const timer = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+      }, 5000);
+      return () => {
+        document.body.style.overflow = 'unset';
+        clearInterval(timer);
+      };
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
-  const portals = [
-    {
-      id: 'admissions',
-      role: 'Admissions Portal',
-      icon: <Users size={48} />,
-      description: 'Manage student applications, enrollments, and parent communications.'
-    },
-    {
-      id: 'librarian',
-      role: 'Librarian Portal',
-      icon: <Book size={48} />,
-      description: 'Access book catalog, track lending history, and manage library resources.'
-    },
-    {
-      id: 'teacher',
-      role: 'Teacher Portal',
-      icon: <GraduationCap size={48} />,
-      description: 'Update grade books, lesson plans, attendance, and student reports.'
-    },
-    {
-      id: 'discipline',
-      role: 'Discipline & Admin',
-      icon: <ShieldCheck size={48} />,
-      description: 'Monitor student conduct, staff schedules, and general administration.'
+  if (!isOpen) return null;
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // Logic points to the existing backend (basePath: /library)
+      const response = await fetch('https://drrleul3osn4a.cloudfront.net/library/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Redirect logic based on role from backend
+        const role = result.data.user.role;
+        // The backend uses 'admin' and 'librarian' currently
+        // Role-based redirection logic
+        if (role === 'librarian' || role === 'admin') {
+          window.location.href = 'https://drrleul3osn4a.cloudfront.net/library/dashboard';
+        } else {
+          // Future roles: teacher, admissions, etc.
+          alert(`Welcome back, ${result.data.user.full_name}. Redirecting to your assigned portal...`);
+        }
+      } else {
+        setError(result.error || 'Invalid credentials. Access denied.');
+      }
+    } catch (err) {
+      setError('Connection to security server failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   return (
-    <div className="fixed inset-0 z-[110] bg-[#e0e5ec] flex flex-col overflow-y-auto animate-[fadeIn_0.3s_ease-out]">
-      {/* Header with Return Button */}
-      <div className="sticky top-0 z-10 bg-[#e0e5ec]/90 backdrop-blur-sm px-6 py-6 flex items-center justify-between shadow-sm">
-        <button
-          onClick={onClose}
-          className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#e0e5ec] text-dgs-primary font-bold shadow-neumorphism hover:shadow-neumorphism-inset transition-all duration-300"
-        >
-          <ArrowLeft size={20} />
-          Return to Website
-        </button>
-
-        <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
-          <span className="text-dgs-primary font-bold hidden md:block">Internal Systems</span>
-        </div>
-      </div>
-
-      {/* Main Grid Content */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-12 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full">
-          {portals.map((portal) => (
+    <div className="fixed inset-0 z-[110] bg-[#e0e5ec] flex flex-col md:flex-row overflow-hidden animate-[fadeIn_0.3s_ease-out]">
+      {/* Left Side: Professional Carousel (Visible on MD+) */}
+      <div className="hidden md:flex md:w-3/5 lg:w-2/3 relative overflow-hidden group">
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+          >
             <div
-              key={portal.id}
-              className="group relative bg-[#e0e5ec] rounded-[40px] shadow-neumorphism p-10 flex flex-col items-center text-center transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
-              onClick={() => {
-                if (portal.id === 'librarian') {
-                  // TODO: Update this URL after deploying the library project
-                  window.open('https://drrleul3osn4a.cloudfront.net/library', '_blank');
-                } else {
-                  alert(`Accessing ${portal.role} (Secured Area)`);
-                }
-              }}
-            >
-              {/* Large User/Role Icon in Neumorphic Circle */}
-              <div className="w-32 h-32 rounded-full bg-[#e0e5ec] shadow-neumorphism flex items-center justify-center text-dgs-primary mb-8 group-hover:text-dgs-accent transition-colors duration-300">
-                {portal.icon}
-              </div>
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] ease-linear transform scale-100 group-hover:scale-110"
+              style={{ backgroundImage: `url(${slide.url})` }}
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <h3 className="text-3xl font-bold text-gray-800 mb-4">{portal.role}</h3>
-              <p className="text-gray-600 text-lg leading-relaxed mb-8 max-w-sm">
-                {portal.description}
+            {/* Slide Content */}
+            <div className="absolute bottom-20 left-20 right-20 text-white animate-[slideUp_0.8s_ease-out]">
+              <h2 className="text-5xl font-bold mb-4">{slide.title}</h2>
+              <p className="text-xl text-gray-200 max-w-lg leading-relaxed">
+                {slide.description}
               </p>
-
-              {/* Enter Button */}
-              <div className="w-full max-w-xs py-4 rounded-xl bg-[#e0e5ec] shadow-neumorphism text-dgs-primary font-bold uppercase tracking-wider text-sm group-hover:shadow-neumorphism-inset transition-all duration-300">
-                Login
-              </div>
             </div>
+          </div>
+        ))}
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-10 left-20 flex gap-3">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide ? 'w-12 bg-white' : 'w-2 bg-white/40'
+                }`}
+            />
           ))}
         </div>
       </div>
 
-      <div className="text-center pb-8 text-gray-500 text-sm">
-        &copy; 2024 Daniel Generation School. Authorized Personnel Only.
+      {/* Right Side: Premium Login Area */}
+      <div className="flex-1 bg-[#e0e5ec] flex flex-col p-8 md:p-12 lg:p-16 relative overflow-y-auto">
+        <button
+          onClick={onClose}
+          className="self-start flex items-center gap-2 px-6 py-3 rounded-full bg-[#e0e5ec] text-dgs-primary font-bold shadow-neumorphism hover:shadow-neumorphism-inset transition-all duration-300 mb-12"
+        >
+          <ArrowLeft size={20} />
+          Return to Site
+        </button>
+
+        <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-16 h-16 rounded-2xl bg-[#e0e5ec] shadow-neumorphism flex items-center justify-center text-dgs-primary">
+              <ShieldCheck size={32} />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">Staff Access</h1>
+              <p className="text-gray-500 font-medium">Internal Systems Verification</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-8">
+            {error && (
+              <div className="p-4 rounded-xl bg-red-50 text-red-500 text-sm font-medium border border-red-100 italic">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-6">
+              <div className="relative group">
+                <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Official Username</label>
+                <div className="relative">
+                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-dgs-primary transition-colors">
+                    <User size={20} />
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="e.g. j.doe"
+                    className="w-full pl-14 pr-6 py-5 bg-[#e0e5ec] rounded-2xl shadow-neumorphism-inset outline-none text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-dgs-primary/20 transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="relative group">
+                <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Password</label>
+                <div className="relative">
+                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-dgs-primary transition-colors">
+                    <Key size={20} />
+                  </span>
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full pl-14 pr-6 py-5 bg-[#e0e5ec] rounded-2xl shadow-neumorphism-inset outline-none text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-dgs-primary/20 transition-all font-medium"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-5 rounded-2xl bg-[#e0e5ec] shadow-neumorphism flex items-center justify-center gap-3 text-dgs-primary font-extrabold uppercase tracking-widest hover:text-dgs-accent hover:shadow-neumorphism-inset transition-all duration-300 disabled:opacity-50"
+            >
+              {isLoading ? (
+                <div className="w-6 h-6 border-4 border-dgs-primary/30 border-t-dgs-primary rounded-full animate-spin" />
+              ) : (
+                <>
+                  <Lock size={20} />
+                  Verify & Enter
+                </>
+              )}
+            </button>
+          </form>
+
+          <p className="mt-12 text-center text-sm text-gray-500 font-medium">
+            Authorized access only. All interactions are monitored.<br />
+            Need help? Contact the IT helpdesk.
+          </p>
+        </div>
+
+        <div className="text-center pt-8 text-gray-400 text-xs">
+          &copy; {new Date().getFullYear()} Daniel Generation School. All Rights Reserved.
+        </div>
       </div>
     </div>
   );
